@@ -1,0 +1,26 @@
+package {{ .Package}}
+
+import (
+    "github.com/NotFound1911/morm"
+    {{range $idx, $import := .Imports}}
+    {{$import}}
+    {{end}}
+)
+
+{{- $ops := .Ops -}}
+{{range $i, $type := .Types }}
+
+const (
+{{- range $j, $field := .Fields}}
+    {{$type.Name }}{{$field.Name}} = "{{$field.Name}}"
+{{- end}}
+)
+
+{{range $j, $field := .Fields}}
+{{- range $k, $op := $ops}}
+func {{$type.Name }}{{$field.Name}}{{$op}}(val {{$field.Type}}) morm.Predicate {
+    return morm.C("{{$field.Name}}").{{$op}}(val)
+}
+{{end}}
+{{- end}}
+{{- end}}
